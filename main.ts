@@ -24,9 +24,14 @@ const TEXT =
 
 // The gate requires 1-200 Unicode code points, not only whitespace:
 // fail loudly here rather than shipping an entry the scorer refuses.
+// The judge also requires a single-line remark, so a stray newline is
+// just as fatal as a wrong length.
 const length = [...TEXT].length;
 if (length < 1 || length > 200 || TEXT.trim().length === 0) {
   throw new Error(`entry text is ${length} characters, outside 1-200`);
+}
+if (TEXT.includes("\n") || TEXT.includes("\r")) {
+  throw new Error("entry text must be a single line");
 }
 
 mkdirSync(dirname(OUT), { recursive: true });
